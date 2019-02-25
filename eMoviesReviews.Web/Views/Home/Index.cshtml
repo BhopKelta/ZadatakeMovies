@@ -1,0 +1,332 @@
+﻿@model List<esp_GetTop10RatedMovies_Result>
+@{
+    ViewData["Title"] = "Home page";
+    var pageCounter = 1;
+    string token = ViewBag.Bearer;
+    double lastIdAverage = 0;
+
+    if (Model.Count > 0)
+    {
+        lastIdAverage = (double)Model.LastOrDefault().ProsjecnaOcjena;
+    }
+}
+<script src="~/js/jquery.autocomplete.js"></script>
+
+<div id="ajaxDiv1">
+    <div class="row">
+        <h2 id="heading1">TOP 10 RATED MOVIES</h2>
+        <div class="col-md col-sm float-right">
+            <div id="searchfield">
+                <form action="http://localhost:49487/api/Movies/SearchMovies" method="post" id="formSearch" enctype="application/x-www-form-urlencoded">
+                    <input name="movieSearch" id="movieSearch" class="form-control" placeholder="Search any movie" minlength=2 required="required" />
+                </form>
+                <p id="outputcontent" style="float:right;"></p>
+            </div>
+            <p></p>
+            <button id="myBtn" class="btn btn-success">Get top 10 rated TV shows</button>
+            <button id="myBtn2" class="btn btn-success" style="display:none">Get top 10 rated Movies</button>
+        </div>
+        <p></p>
+        <div class="col-md col-sm col-md-offset-10 col-sm-offset-10">
+            <button id="load10More" class="btn btn-default">Load 10 more results</button>
+        </div>
+        <p></p>
+        <div class="col-md col-sm" id="myDiv">
+            <table class="table table-bordered" id="myTable">
+                <thead>
+                    <tr>
+                        <th>R.br.</th>
+                        <th>Film - Opis</th>
+                        <th>Tip filma</th>
+                        <th>Ocjena</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var x in Model)
+                    {
+                        <tr>
+                            <td>@(pageCounter++)</td>
+                            <td>@x.Naslov</td>
+                            <th>@x.Tip</th>
+                            <td>@x.ProsjecnaOcjena</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+<script>
+    localStorage.setItem("currentView", "movie");
+    var bearer = '@token';
+    localStorage.setItem('token', bearer);
+
+    //GEt top 10 rated tv shows
+    $("#myBtn").click(function (event) {
+        event.preventDefault();
+        $.ajax({
+            type: "get",
+            url: "/Home/Index?tvShow=" + "TV SHOW",
+            success: function (data) {
+                $("#ajaxDiv1").html(data);
+                $("#heading1").html("TOP 10 RATED TV SHOWS");
+
+                localStorage.setItem("currentView", "show");
+                //Toggle trigger - swithc for tv and movies show
+                $("#myBtn").hide();
+                $("#myBtn2").show();
+            }
+        });
+    });
+
+    //Get top 10 rated movies
+    $("#myBtn2").click(function (event) {
+        event.preventDefault();
+        $.ajax({
+            type: "get",
+            url: "/Home/Index",
+            success: function (data) {
+                $("#ajaxDiv1").html(data);
+                $("#heading1").html("TOP 10 RATED MOVIES");
+
+                localStorage.setItem("currentView", "movie");
+                //Toggle trigger - swithc for tv and movies show
+                $("#myBtn").show();
+                $("#myBtn2").hide();
+            }
+        });
+    });
+    //Load 10 more results
+    $("#load10More").click(function (event) {
+        event.preventDefault();
+        var url = "",tvShow="";
+        var currentView = localStorage.getItem("currentView");
+
+        if (currentView == "show")
+            tvShow = "TV SHOW";
+
+        if (currentView == "show" || currentView == "movie") {
+            $.ajax({
+                type: "get",
+                url: "/Home/Index",
+                data: { 'tvShow': tvShow, 'lastId':@lastIdAverage},
+                success: function (data) {
+                    $("#ajaxDiv1").html(data);
+                    if (currentView == "show")
+                        $("#heading1").html("TOP 10 RATED TV SHOWS");
+                }
+            });
+        }
+        else if (currentView == "search") {
+            //Set page, to skip rows
+            var page = localStorage.getItem("page");
+            page = parseInt(page);
+
+            var podaci = localStorage.getItem("searchWord");
+
+            var root = {
+                podaci: podaci,
+                pageNumber: page
+            };
+
+            if (podaci) {
+                $.ajax({
+                    type: "post",
+                    url: "http://localhost:49487/api/Movies/SearchMovies",
+                    headers: {
+                        'Authorization': 'Bearer ' + bearer
+                    },
+                    data: JSON.stringify(root),
+                    contentType: "application/json",
+                    success: function (a) {
+                        var rootDiv = document.createElement("div");
+                        rootDiv.style = "id:outputbox";
+
+                        var header = document.createElement("h3");
+                        var textNode = document.createTextNode("Movies - found by search");
+                        header.appendChild(textNode);
+                        rootDiv.append(header);
+
+                        var heading1 = document.createElement("span");
+                        var textHeading1 = document.createTextNode("Name |");
+                        heading1.appendChild(textHeading1);
+
+                        var heading2 = document.createElement("span");
+                        var textHeading2 = document.createTextNode("Description |");
+
+                        heading2.appendChild(textHeading2);
+
+                        var heading3 = document.createElement("span");
+                        var textHeading3 = document.createTextNode("Rating");
+
+                        heading3.appendChild(textHeading3);
+
+                        rootDiv.appendChild(heading1);
+                        rootDiv.appendChild(heading2);
+                        rootDiv.appendChild(heading3);
+
+
+                        for (var i = 0; i < a.length; i++) {
+                            var breakM = document.createElement("br");
+
+                            //Display movie banner
+                            if (a[i].Slika) {
+                                var slika = document.createElement("img");
+                                slika.setAttribute("src", "data:image/png;base64," + a[i].Slika);
+                                slika.style.width = "90px";
+                                slika.style.height = "89px";
+                                rootDiv.appendChild(slika);
+                            }
+
+                            var Counter = document.createElement("p");
+                            var CounterNode = document.createTextNode(i + 1 + ".");
+                            Counter.appendChild(CounterNode);
+
+                            var createNeWtable = document.createElement("div");
+                            createNeWtable.style = "font-size:18px;margin:5px;border-bottom:1px solid black";
+                            createNeWtable.appendChild(Counter);
+
+                            var node = document.createTextNode("|Name:" + a[i].Naslov + "|");
+                            var node2 = document.createTextNode("|Description:" + a[i].Opis + "|");
+
+                            var node3 = document.createTextNode("|Rating:" + a[i].ProsjecnaOcjena + "-stars");
+                            var node4 = document.createTextNode("|Type of movie: " + a[i].Tip);
+                            createNeWtable.appendChild(node);
+                            createNeWtable.appendChild(breakM);
+                            createNeWtable.appendChild(node2);
+                            createNeWtable.appendChild(breakM);
+
+                            createNeWtable.appendChild(node3);
+                            createNeWtable.appendChild(breakM);
+                            createNeWtable.appendChild(node4);
+
+
+                            rootDiv.appendChild(createNeWtable);
+                        }
+                        $("#myDiv").html(rootDiv);
+                    }
+                });
+                page++;
+                localStorage.setItem("page", page);
+            }
+        }
+    });
+
+    //Search movies from the DB
+    $(document).ready(function () {
+
+        $("#formSearch").change(function (event) {
+            event.preventDefault();
+
+            //Get data from input
+            var podaci = $("#movieSearch").val();
+            //$("#load10More").hide();
+            localStorage.setItem("currentView", "search");
+            localStorage.setItem("searchWord", podaci);
+
+            var pageNumber = 0;
+
+            var root = {
+                podaci: podaci,
+                pageNumber:pageNumber
+            };
+            //When we entered two characters search
+            if (podaci.length >= 2) {
+                $.ajax({
+                    type: "post",
+                    url: "http://localhost:49487/api/Movies/SearchMovies",
+                    headers: {
+                        'Authorization': 'Bearer ' + bearer
+                    },
+                    data: JSON.stringify(root),
+                    contentType: "application/json",
+                    success: function (a) {
+
+                        //SHOW searched movies on view
+                        var rootDiv = document.createElement("div");
+                        rootDiv.style = "id:outputbox";
+
+                        var header = document.createElement("h3");
+                        var textNode = document.createTextNode("Movies - found by search");
+                        header.appendChild(textNode);
+                        rootDiv.append(header);
+
+                        var heading1 = document.createElement("span");
+                        var textHeading1 = document.createTextNode("Name |");
+                        heading1.appendChild(textHeading1);
+
+                        var heading2 = document.createElement("span");
+                        var textHeading2 = document.createTextNode("Description |");
+
+                        heading2.appendChild(textHeading2);
+
+                        var heading3 = document.createElement("span");
+                        var textHeading3 = document.createTextNode("Rating");
+
+                        heading3.appendChild(textHeading3);
+
+                        rootDiv.appendChild(heading1);
+                        rootDiv.appendChild(heading2);
+                        rootDiv.appendChild(heading3);
+
+
+                        for (var i = 0; i < a.length; i++) {
+                            var breakM = document.createElement("br");
+
+                            //Display movie banner
+                            if (a[i].Slika) {
+                                var slika = document.createElement("img");
+                                slika.setAttribute("src", "data:image/png;base64," + a[i].Slika);
+                                slika.style.width = "90px";
+                                slika.style.height = "89px";
+                                rootDiv.appendChild(slika);
+                            }
+
+                            var Counter = document.createElement("p");
+                            var CounterNode = document.createTextNode(i + 1 + ".");
+                            Counter.appendChild(CounterNode);
+
+                            var createNeWtable = document.createElement("div");
+                            createNeWtable.style = "font-size:18px;margin:5px;border-bottom:1px solid black";
+                            createNeWtable.appendChild(Counter);
+
+                            var node = document.createTextNode("|Name:" + a[i].Naslov + "|");
+                            var node2 = document.createTextNode("|Description:" + a[i].Opis + "|");
+
+                            var node3 = document.createTextNode("|Rating:" + a[i].ProsjecnaOcjena + "-stars");
+                            var node4 = document.createTextNode("|Type of movie: " + a[i].Tip);
+                            createNeWtable.appendChild(node);
+                            createNeWtable.appendChild(breakM);
+                            createNeWtable.appendChild(node2);
+                            createNeWtable.appendChild(breakM);
+
+                            createNeWtable.appendChild(node3);
+                            createNeWtable.appendChild(breakM);
+                            createNeWtable.appendChild(node4);
+
+
+                            rootDiv.appendChild(createNeWtable);
+                        }
+                        $("#myDiv").html(rootDiv);
+                        pageNumber++;
+                        localStorage.setItem("page", pageNumber);
+                    }
+                });
+               
+            }
+        });
+    });
+
+    //When search field is empty change to tab/toggle of movies/shows
+    $("#movieSearch").change(function () {
+        var search = $("#moviSearch").val();
+        if ($(this).val() == 0) {
+            var currentView = localStorage.getItem("currentView");
+            if (currentView != "movie")
+                location.href = "/Home/Index";
+            else location.href = "/Home/Index?tvShow=" + "TV SHOW";
+        }
+    });
+
+</script>

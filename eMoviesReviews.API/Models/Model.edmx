@@ -1,0 +1,819 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="eMovies2019Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Filmovi">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Naslov" Type="nvarchar(max)" />
+          <Property Name="Slika" Type="varbinary(max)" />
+          <Property Name="Opis" Type="nvarchar(max)" />
+          <Property Name="DatumRealizacije" Type="datetime2" Precision="7" Nullable="false" />
+          <Property Name="KategorijaId" Type="int" />
+        </EntityType>
+        <EntityType Name="Glumci">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Ime" Type="nvarchar(max)" />
+          <Property Name="Prezime" Type="nvarchar(max)" />
+          <Property Name="datumRodjenja" Type="datetime2" Precision="7" Nullable="false" />
+          <Property Name="GodineRada" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="GlumljenjeFilma">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="GlumacId" Type="int" Nullable="false" />
+          <Property Name="FilmId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="KategorijaFilma">
+          <Key>
+            <PropertyRef Name="KategorijaId" />
+          </Key>
+          <Property Name="KategorijaId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Tip" Type="nvarchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="Korisnici">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="username" Type="nvarchar(max)" />
+          <Property Name="password" Type="nvarchar(max)" />
+          <Property Name="Ime" Type="nvarchar(max)" />
+          <Property Name="Prezime" Type="nvarchar(max)" />
+          <Property Name="datumRodjenja" Type="datetime2" Precision="7" Nullable="false" />
+          <Property Name="Email" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="RecenzijeFilmova">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="KorisnikId" Type="int" Nullable="false" />
+          <Property Name="FilmId" Type="int" Nullable="false" />
+          <Property Name="Ocjena" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="fk_film_kategorija">
+          <End Role="KategorijaFilma" Type="Self.KategorijaFilma" Multiplicity="0..1" />
+          <End Role="Filmovi" Type="Self.Filmovi" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="KategorijaFilma">
+              <PropertyRef Name="KategorijaId" />
+            </Principal>
+            <Dependent Role="Filmovi">
+              <PropertyRef Name="KategorijaId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GlumljenjeFilma_Filmovi_FilmId">
+          <End Role="Filmovi" Type="Self.Filmovi" Multiplicity="1" />
+          <End Role="GlumljenjeFilma" Type="Self.GlumljenjeFilma" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Filmovi">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="GlumljenjeFilma">
+              <PropertyRef Name="FilmId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GlumljenjeFilma_Glumci_GlumacId">
+          <End Role="Glumci" Type="Self.Glumci" Multiplicity="1" />
+          <End Role="GlumljenjeFilma" Type="Self.GlumljenjeFilma" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Glumci">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="GlumljenjeFilma">
+              <PropertyRef Name="GlumacId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RecenzijeFilmova_Filmovi_FilmId">
+          <End Role="Filmovi" Type="Self.Filmovi" Multiplicity="1" />
+          <End Role="RecenzijeFilmova" Type="Self.RecenzijeFilmova" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Filmovi">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RecenzijeFilmova">
+              <PropertyRef Name="FilmId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RecenzijeFilmova_Korisnici_KorisnikId">
+          <End Role="Korisnici" Type="Self.Korisnici" Multiplicity="1" />
+          <End Role="RecenzijeFilmova" Type="Self.RecenzijeFilmova" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Korisnici">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RecenzijeFilmova">
+              <PropertyRef Name="KorisnikId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="esp_AddRatingToMovie" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" StoreFunctionName="esp.AddRatingToMovie">
+          <Parameter Name="param1" Type="int" Mode="In" />
+          <Parameter Name="param2" Type="int" Mode="In" />
+        </Function>
+        <Function Name="esp_GetAllMovies" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" StoreFunctionName="esp.GetAllMovies" />
+        <Function Name="esp_GetTop10RatedMovies" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" StoreFunctionName="esp.GetTop10RatedMovies" />
+        <Function Name="esp_GetTop10RatedTVshows" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" StoreFunctionName="esp.GetTop10RatedTVshows">
+          <Parameter Name="param1" Type="nvarchar(max)" Mode="In" />
+        </Function>
+        <Function Name="esp_LoadTenMoreMoviesResults" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" StoreFunctionName="esp.LoadTenMoreMoviesResults">
+          <Parameter Name="param1" Type="float" Mode="In" />
+        </Function>
+        <Function Name="esp_LoadTenMoreTvShowsResults" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" StoreFunctionName="esp.LoadTenMoreTvShowsResults">
+          <Parameter Name="param1" Type="float" Mode="In" />
+          <Parameter Name="param2" Type="nvarchar(max)" Mode="In" />
+        </Function>
+        <Function Name="esp_SearchMovie" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" StoreFunctionName="esp.SearchMovie">
+          <Parameter Name="param1" Type="nvarchar(max)" Mode="In" />
+        </Function>
+        <Function Name="esp_SearchMovieBetweenMinAndExact" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" StoreFunctionName="esp.SearchMovieBetweenMinAndExact">
+          <Parameter Name="param1" Type="float" Mode="In" />
+        </Function>
+        <Function Name="esp_SearchMovieBetweenMinAndExactSkip10Rows" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" StoreFunctionName="esp.SearchMovieBetweenMinAndExactSkip10Rows">
+          <Parameter Name="param1" Type="float" Mode="In" />
+          <Parameter Name="param2" Type="int" Mode="In" />
+        </Function>
+        <Function Name="esp_SearchMovieByEarlierDate" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" StoreFunctionName="esp.SearchMovieByEarlierDate">
+          <Parameter Name="param1" Type="int" Mode="In" />
+        </Function>
+        <Function Name="esp_SearchMovieByEarlierDateSkip10Rows" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" StoreFunctionName="esp.SearchMovieByEarlierDateSkip10Rows">
+          <Parameter Name="param1" Type="int" Mode="In" />
+          <Parameter Name="param2" Type="int" Mode="In" />
+        </Function>
+        <Function Name="esp_SearchMovieByExactRating" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" StoreFunctionName="esp.SearchMovieByExactRating">
+          <Parameter Name="param1" Type="float" Mode="In" />
+        </Function>
+        <Function Name="esp_SearchMovieByExactRatingSkip10Rows" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" StoreFunctionName="esp.SearchMovieByExactRatingSkip10Rows">
+          <Parameter Name="param1" Type="float" Mode="In" />
+          <Parameter Name="param2" Type="int" Mode="In" />
+        </Function>
+        <Function Name="esp_SearchMovieByLaterDate" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" StoreFunctionName="esp.SearchMovieByLaterDate">
+          <Parameter Name="param1" Type="int" Mode="In" />
+        </Function>
+        <Function Name="esp_SearchMovieByLaterDateSkip10Rows" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" StoreFunctionName="esp.SearchMovieByLaterDateSkip10Rows">
+          <Parameter Name="param1" Type="int" Mode="In" />
+          <Parameter Name="param2" Type="int" Mode="In" />
+        </Function>
+        <Function Name="esp_SearchMovieSkip10Rows" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" StoreFunctionName="esp.SearchMovieSkip10Rows">
+          <Parameter Name="param1" Type="nvarchar(max)" Mode="In" />
+          <Parameter Name="param2" Type="int" Mode="In" />
+        </Function>
+        <Function Name="esp_SelectFromUsers" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" StoreFunctionName="esp.SelectFromUsers" />
+        <EntityContainer Name="eMovies2019ModelStoreContainer">
+          <EntitySet Name="Filmovi" EntityType="Self.Filmovi" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Glumci" EntityType="Self.Glumci" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="GlumljenjeFilma" EntityType="Self.GlumljenjeFilma" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="KategorijaFilma" EntityType="Self.KategorijaFilma" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Korisnici" EntityType="Self.Korisnici" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RecenzijeFilmova" EntityType="Self.RecenzijeFilmova" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="fk_film_kategorija" Association="Self.fk_film_kategorija">
+            <End Role="KategorijaFilma" EntitySet="KategorijaFilma" />
+            <End Role="Filmovi" EntitySet="Filmovi" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GlumljenjeFilma_Filmovi_FilmId" Association="Self.FK_GlumljenjeFilma_Filmovi_FilmId">
+            <End Role="Filmovi" EntitySet="Filmovi" />
+            <End Role="GlumljenjeFilma" EntitySet="GlumljenjeFilma" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GlumljenjeFilma_Glumci_GlumacId" Association="Self.FK_GlumljenjeFilma_Glumci_GlumacId">
+            <End Role="Glumci" EntitySet="Glumci" />
+            <End Role="GlumljenjeFilma" EntitySet="GlumljenjeFilma" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RecenzijeFilmova_Filmovi_FilmId" Association="Self.FK_RecenzijeFilmova_Filmovi_FilmId">
+            <End Role="Filmovi" EntitySet="Filmovi" />
+            <End Role="RecenzijeFilmova" EntitySet="RecenzijeFilmova" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RecenzijeFilmova_Korisnici_KorisnikId" Association="Self.FK_RecenzijeFilmova_Korisnici_KorisnikId">
+            <End Role="Korisnici" EntitySet="Korisnici" />
+            <End Role="RecenzijeFilmova" EntitySet="RecenzijeFilmova" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="eMovies2019Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Filmovi">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Naslov" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Slika" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="Opis" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="DatumRealizacije" Type="DateTime" Nullable="false" Precision="7" />
+          <NavigationProperty Name="GlumljenjeFilma" Relationship="Self.FK_GlumljenjeFilma_Filmovi_FilmId" FromRole="Filmovi" ToRole="GlumljenjeFilma" />
+          <NavigationProperty Name="RecenzijeFilmova" Relationship="Self.FK_RecenzijeFilmova_Filmovi_FilmId" FromRole="Filmovi" ToRole="RecenzijeFilmova" />
+          <Property Name="KategorijaId" Type="Int32" />
+          <NavigationProperty Name="KategorijaFilma" Relationship="eMovies2019Model.fk_film_kategorija" FromRole="Filmovi" ToRole="KategorijaFilma" />
+        </EntityType>
+        <EntityType Name="Glumci">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Ime" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Prezime" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="datumRodjenja" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="GodineRada" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="GlumljenjeFilma" Relationship="Self.FK_GlumljenjeFilma_Glumci_GlumacId" FromRole="Glumci" ToRole="GlumljenjeFilma" />
+        </EntityType>
+        <EntityType Name="GlumljenjeFilma">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="GlumacId" Type="Int32" Nullable="false" />
+          <Property Name="FilmId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Filmovi" Relationship="Self.FK_GlumljenjeFilma_Filmovi_FilmId" FromRole="GlumljenjeFilma" ToRole="Filmovi" />
+          <NavigationProperty Name="Glumci" Relationship="Self.FK_GlumljenjeFilma_Glumci_GlumacId" FromRole="GlumljenjeFilma" ToRole="Glumci" />
+        </EntityType>
+        <EntityType Name="Korisnici">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="username" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="password" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Ime" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Prezime" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="datumRodjenja" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="Email" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="RecenzijeFilmova" Relationship="Self.FK_RecenzijeFilmova_Korisnici_KorisnikId" FromRole="Korisnici" ToRole="RecenzijeFilmova" />
+        </EntityType>
+        <EntityType Name="RecenzijeFilmova">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="KorisnikId" Type="Int32" Nullable="false" />
+          <Property Name="FilmId" Type="Int32" Nullable="false" />
+          <Property Name="Ocjena" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Filmovi" Relationship="Self.FK_RecenzijeFilmova_Filmovi_FilmId" FromRole="RecenzijeFilmova" ToRole="Filmovi" />
+          <NavigationProperty Name="Korisnici" Relationship="Self.FK_RecenzijeFilmova_Korisnici_KorisnikId" FromRole="RecenzijeFilmova" ToRole="Korisnici" />
+        </EntityType>
+        <Association Name="FK_GlumljenjeFilma_Filmovi_FilmId">
+          <End Role="Filmovi" Type="Self.Filmovi" Multiplicity="1" />
+          <End Role="GlumljenjeFilma" Type="Self.GlumljenjeFilma" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Filmovi">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="GlumljenjeFilma">
+              <PropertyRef Name="FilmId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RecenzijeFilmova_Filmovi_FilmId">
+          <End Role="Filmovi" Type="Self.Filmovi" Multiplicity="1" />
+          <End Role="RecenzijeFilmova" Type="Self.RecenzijeFilmova" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Filmovi">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RecenzijeFilmova">
+              <PropertyRef Name="FilmId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GlumljenjeFilma_Glumci_GlumacId">
+          <End Role="Glumci" Type="Self.Glumci" Multiplicity="1" />
+          <End Role="GlumljenjeFilma" Type="Self.GlumljenjeFilma" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Glumci">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="GlumljenjeFilma">
+              <PropertyRef Name="GlumacId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RecenzijeFilmova_Korisnici_KorisnikId">
+          <End Role="Korisnici" Type="Self.Korisnici" Multiplicity="1" />
+          <End Role="RecenzijeFilmova" Type="Self.RecenzijeFilmova" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Korisnici">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RecenzijeFilmova">
+              <PropertyRef Name="KorisnikId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="eMovies2019Entities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Filmovi" EntityType="Self.Filmovi" />
+          <EntitySet Name="Glumci" EntityType="Self.Glumci" />
+          <EntitySet Name="GlumljenjeFilma" EntityType="Self.GlumljenjeFilma" />
+          <EntitySet Name="Korisnici" EntityType="Self.Korisnici" />
+          <EntitySet Name="RecenzijeFilmova" EntityType="Self.RecenzijeFilmova" />
+          <AssociationSet Name="FK_GlumljenjeFilma_Filmovi_FilmId" Association="Self.FK_GlumljenjeFilma_Filmovi_FilmId">
+            <End Role="Filmovi" EntitySet="Filmovi" />
+            <End Role="GlumljenjeFilma" EntitySet="GlumljenjeFilma" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RecenzijeFilmova_Filmovi_FilmId" Association="Self.FK_RecenzijeFilmova_Filmovi_FilmId">
+            <End Role="Filmovi" EntitySet="Filmovi" />
+            <End Role="RecenzijeFilmova" EntitySet="RecenzijeFilmova" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GlumljenjeFilma_Glumci_GlumacId" Association="Self.FK_GlumljenjeFilma_Glumci_GlumacId">
+            <End Role="Glumci" EntitySet="Glumci" />
+            <End Role="GlumljenjeFilma" EntitySet="GlumljenjeFilma" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RecenzijeFilmova_Korisnici_KorisnikId" Association="Self.FK_RecenzijeFilmova_Korisnici_KorisnikId">
+            <End Role="Korisnici" EntitySet="Korisnici" />
+            <End Role="RecenzijeFilmova" EntitySet="RecenzijeFilmova" />
+          </AssociationSet>
+          <EntitySet Name="KategorijaFilma" EntityType="eMovies2019Model.KategorijaFilma" />
+          <AssociationSet Name="fk_film_kategorija" Association="eMovies2019Model.fk_film_kategorija">
+            <End Role="KategorijaFilma" EntitySet="KategorijaFilma" />
+            <End Role="Filmovi" EntitySet="Filmovi" />
+          </AssociationSet>
+          <FunctionImport Name="esp_SelectFromUsers" ReturnType="Collection(eMovies2019Model.esp_SelectFromUsers_Result)">
+            </FunctionImport>
+          <FunctionImport Name="esp_GetTop10RatedMovies" ReturnType="Collection(eMovies2019Model.esp_GetTop10RatedMovies_Result)" />
+          <FunctionImport Name="esp_GetTop10RatedTVshows" ReturnType="Collection(eMovies2019Model.esp_GetTop10RatedMovies_Result)">
+          <Parameter Name="param1" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="esp_SearchMovie" ReturnType="Collection(eMovies2019Model.esp_SearchMovie_Result)">
+          <Parameter Name="param1" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="esp_SearchMovieBetweenMinAndExact" ReturnType="Collection(eMovies2019Model.esp_SearchMovie_Result)">
+          <Parameter Name="param1" Mode="In" Type="Double" />
+          </FunctionImport>
+          <FunctionImport Name="esp_SearchMovieByEarlierDate" ReturnType="Collection(eMovies2019Model.esp_SearchMovie_Result)">
+          <Parameter Name="param1" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="esp_SearchMovieByExactRating" ReturnType="Collection(eMovies2019Model.esp_SearchMovie_Result)">
+          <Parameter Name="param1" Mode="In" Type="Double" />
+          </FunctionImport>
+          <FunctionImport Name="esp_SearchMovieByLaterDate" ReturnType="Collection(eMovies2019Model.esp_SearchMovie_Result)">
+          <Parameter Name="param1" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="esp_LoadTenMoreMoviesResults" ReturnType="Collection(eMovies2019Model.esp_GetTop10RatedMovies_Result)">
+          <Parameter Name="param1" Mode="In" Type="Double" />
+          </FunctionImport>
+          <FunctionImport Name="esp_LoadTenMoreTvShowsResults" ReturnType="Collection(eMovies2019Model.esp_GetTop10RatedMovies_Result)">
+            <Parameter Name="param1" Mode="In" Type="Double" />
+            <Parameter Name="param2" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="esp_GetAllMovies" ReturnType="Collection(eMovies2019Model.esp_GetAllMovies_Result)" />
+          <FunctionImport Name="esp_AddRatingToMovie">
+            <Parameter Name="param1" Mode="In" Type="Int32" />
+            <Parameter Name="param2" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="esp_SearchMovieSkip10Rows" ReturnType="Collection(eMovies2019Model.esp_SearchMovie_Result)">
+            <Parameter Name="param1" Mode="In" Type="String" />
+            <Parameter Name="param2" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="esp_SearchMovieBetweenMinAndExactSkip10Rows" ReturnType="Collection(eMovies2019Model.esp_SearchMovie_Result)">
+            <Parameter Name="param1" Mode="In" Type="Double" />
+            <Parameter Name="param2" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="esp_SearchMovieByEarlierDateSkip10Rows" ReturnType="Collection(eMovies2019Model.esp_SearchMovie_Result)">
+            <Parameter Name="param1" Mode="In" Type="Int32" />
+            <Parameter Name="param2" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="esp_SearchMovieByExactRatingSkip10Rows" ReturnType="Collection(eMovies2019Model.esp_SearchMovie_Result)">
+            <Parameter Name="param1" Mode="In" Type="Double" />
+            <Parameter Name="param2" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="esp_SearchMovieByLaterDateSkip10Rows" ReturnType="Collection(eMovies2019Model.esp_SearchMovie_Result)">
+            <Parameter Name="param1" Mode="In" Type="Int32" />
+            <Parameter Name="param2" Mode="In" Type="Int32" />
+          </FunctionImport>
+        </EntityContainer>
+        <EntityType Name="KategorijaFilma">
+          <Key>
+            <PropertyRef Name="KategorijaId" />
+          </Key>
+          <Property Name="KategorijaId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Tip" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Filmovi" Relationship="eMovies2019Model.fk_film_kategorija" FromRole="KategorijaFilma" ToRole="Filmovi" />
+        </EntityType>
+        <Association Name="fk_film_kategorija">
+          <End Type="eMovies2019Model.KategorijaFilma" Role="KategorijaFilma" Multiplicity="0..1" />
+          <End Type="eMovies2019Model.Filmovi" Role="Filmovi" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="KategorijaFilma">
+              <PropertyRef Name="KategorijaId" />
+            </Principal>
+            <Dependent Role="Filmovi">
+              <PropertyRef Name="KategorijaId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <ComplexType Name="esp_SelectFromUsers_Result">
+          <Property Type="Int32" Name="Id" Nullable="false" />
+          <Property Type="String" Name="username" Nullable="true" />
+          <Property Type="String" Name="password" Nullable="true" />
+          <Property Type="String" Name="Ime" Nullable="true" />
+          <Property Type="String" Name="Prezime" Nullable="true" />
+          <Property Type="DateTime" Name="datumRodjenja" Nullable="false" />
+          <Property Type="String" Name="Email" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="esp_GetTop10RatedMovies_Result">
+          <Property Type="String" Name="Naslov" Nullable="true" />
+          <Property Type="String" Name="Opis" Nullable="true" />
+          <Property Type="String" Name="Tip" Nullable="true" MaxLength="100" />
+          <Property Type="Double" Name="ProsjecnaOcjena" Nullable="true" />
+          <Property Type="Int32" Name="FilmId" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="esp_GetTop10RatedTVshows_Result">
+          <Property Type="String" Name="Naslov" Nullable="true" />
+          <Property Type="String" Name="Opis" Nullable="true" />
+          <Property Type="String" Name="Tip" Nullable="true" MaxLength="100" />
+          <Property Type="Int32" Name="Ocjena" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="esp_GetTop10RatedMovies_ResultN">
+          <Property Type="String" Name="Naslov" Nullable="true" />
+          <Property Type="String" Name="Opis" Nullable="true" />
+          <Property Type="String" Name="Tip" Nullable="true" MaxLength="100" />
+          <Property Type="Double" Name="ProsjecnaOcjena" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="esp_SearchMovie_Result">
+          <Property Type="String" Name="Naslov" Nullable="true" />
+          <Property Type="String" Name="Opis" Nullable="true" />
+          <Property Type="String" Name="Tip" Nullable="true" MaxLength="100" />
+          <Property Type="Double" Name="ProsjecnaOcjena" Nullable="true" />
+          <Property Type="Int32" Name="FilmId" Nullable="false" />
+          <Property Type="Binary" Name="Slika" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="esp_SearchMovieBetweenMinAndExact_Result">
+          <Property Type="String" Name="Naslov" Nullable="true" />
+          <Property Type="String" Name="Opis" Nullable="true" />
+          <Property Type="String" Name="Tip" Nullable="true" MaxLength="100" />
+          <Property Type="Double" Name="ProsjecnaOcjena" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="esp_SearchMovieByEarlierDate_Result">
+          <Property Type="String" Name="Naslov" Nullable="true" />
+          <Property Type="String" Name="Opis" Nullable="true" />
+          <Property Type="String" Name="Tip" Nullable="true" MaxLength="100" />
+          <Property Type="Double" Name="ProsjecnaOcjena" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="esp_SearchMovieByExactRating_Result">
+          <Property Type="String" Name="Naslov" Nullable="true" />
+          <Property Type="String" Name="Opis" Nullable="true" />
+          <Property Type="String" Name="Tip" Nullable="true" MaxLength="100" />
+          <Property Type="Double" Name="ProsjecnaOcjena" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="esp_SearchMovieByLaterDate_Result">
+          <Property Type="String" Name="Naslov" Nullable="true" />
+          <Property Type="String" Name="Opis" Nullable="true" />
+          <Property Type="String" Name="Tip" Nullable="true" MaxLength="100" />
+          <Property Type="Double" Name="ProsjecnaOcjena" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="esp_LoadTenMoreMoviesResults_Result">
+          <Property Type="String" Name="Naslov" Nullable="true" />
+          <Property Type="String" Name="Opis" Nullable="true" />
+          <Property Type="String" Name="Tip" Nullable="true" MaxLength="100" />
+          <Property Type="Double" Name="ProsjecnaOcjena" Nullable="true" />
+          <Property Type="Int32" Name="FilmId" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="esp_LoadTenMoreTvShowsResults_Result">
+          <Property Type="String" Name="Naslov" Nullable="true" />
+          <Property Type="String" Name="Opis" Nullable="true" />
+          <Property Type="String" Name="Tip" Nullable="true" MaxLength="100" />
+          <Property Type="Double" Name="ProsjecnaOcjena" Nullable="true" />
+          <Property Type="Int32" Name="FilmId" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="esp_GetAllMovies_Result">
+          <Property Type="String" Name="Naslov" Nullable="true" />
+          <Property Type="String" Name="Opis" Nullable="true" />
+          <Property Type="String" Name="Tip" Nullable="true" MaxLength="100" />
+          <Property Type="Double" Name="ProsjecnaOcjena" Nullable="true" />
+          <Property Type="Int32" Name="FilmId" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="esp_SearchMovieSkip10Rows_Result">
+          <Property Type="String" Name="Naslov" Nullable="true" />
+          <Property Type="String" Name="Opis" Nullable="true" />
+          <Property Type="String" Name="Tip" Nullable="true" MaxLength="100" />
+          <Property Type="Double" Name="ProsjecnaOcjena" Nullable="true" />
+          <Property Type="Int32" Name="FilmId" Nullable="false" />
+          <Property Type="Binary" Name="Slika" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="esp_SearchMovieBetweenMinAndExactSkip10Rows_Result">
+          <Property Type="String" Name="Naslov" Nullable="true" />
+          <Property Type="String" Name="Opis" Nullable="true" />
+          <Property Type="String" Name="Tip" Nullable="true" MaxLength="100" />
+          <Property Type="Double" Name="ProsjecnaOcjena" Nullable="true" />
+          <Property Type="Int32" Name="FilmId" Nullable="false" />
+          <Property Type="Binary" Name="Slika" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="esp_SearchMovieByEarlierDateSkip10Rows_Result">
+          <Property Type="String" Name="Naslov" Nullable="true" />
+          <Property Type="String" Name="Opis" Nullable="true" />
+          <Property Type="String" Name="Tip" Nullable="true" MaxLength="100" />
+          <Property Type="Double" Name="ProsjecnaOcjena" Nullable="true" />
+          <Property Type="Int32" Name="FilmId" Nullable="false" />
+          <Property Type="Binary" Name="Slika" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="esp_SearchMovieByExactRatingSkip10Rows_Result">
+          <Property Type="String" Name="Naslov" Nullable="true" />
+          <Property Type="String" Name="Opis" Nullable="true" />
+          <Property Type="String" Name="Tip" Nullable="true" MaxLength="100" />
+          <Property Type="Double" Name="ProsjecnaOcjena" Nullable="true" />
+          <Property Type="Int32" Name="FilmId" Nullable="false" />
+          <Property Type="Binary" Name="Slika" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="esp_SearchMovieByLaterDateSkip10Rows_Result">
+          <Property Type="String" Name="Naslov" Nullable="true" />
+          <Property Type="String" Name="Opis" Nullable="true" />
+          <Property Type="String" Name="Tip" Nullable="true" MaxLength="100" />
+          <Property Type="Double" Name="ProsjecnaOcjena" Nullable="true" />
+          <Property Type="Int32" Name="FilmId" Nullable="false" />
+          <Property Type="Binary" Name="Slika" Nullable="true" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="eMovies2019ModelStoreContainer" CdmEntityContainer="eMovies2019Entities">
+          <EntitySetMapping Name="Filmovi">
+            <EntityTypeMapping TypeName="eMovies2019Model.Filmovi">
+              <MappingFragment StoreEntitySet="Filmovi">
+                <ScalarProperty Name="KategorijaId" ColumnName="KategorijaId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Naslov" ColumnName="Naslov" />
+                <ScalarProperty Name="Slika" ColumnName="Slika" />
+                <ScalarProperty Name="Opis" ColumnName="Opis" />
+                <ScalarProperty Name="DatumRealizacije" ColumnName="DatumRealizacije" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Glumci">
+            <EntityTypeMapping TypeName="eMovies2019Model.Glumci">
+              <MappingFragment StoreEntitySet="Glumci">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Ime" ColumnName="Ime" />
+                <ScalarProperty Name="Prezime" ColumnName="Prezime" />
+                <ScalarProperty Name="datumRodjenja" ColumnName="datumRodjenja" />
+                <ScalarProperty Name="GodineRada" ColumnName="GodineRada" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="GlumljenjeFilma">
+            <EntityTypeMapping TypeName="eMovies2019Model.GlumljenjeFilma">
+              <MappingFragment StoreEntitySet="GlumljenjeFilma">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="GlumacId" ColumnName="GlumacId" />
+                <ScalarProperty Name="FilmId" ColumnName="FilmId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Korisnici">
+            <EntityTypeMapping TypeName="eMovies2019Model.Korisnici">
+              <MappingFragment StoreEntitySet="Korisnici">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="username" ColumnName="username" />
+                <ScalarProperty Name="password" ColumnName="password" />
+                <ScalarProperty Name="Ime" ColumnName="Ime" />
+                <ScalarProperty Name="Prezime" ColumnName="Prezime" />
+                <ScalarProperty Name="datumRodjenja" ColumnName="datumRodjenja" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RecenzijeFilmova">
+            <EntityTypeMapping TypeName="eMovies2019Model.RecenzijeFilmova">
+              <MappingFragment StoreEntitySet="RecenzijeFilmova">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="KorisnikId" ColumnName="KorisnikId" />
+                <ScalarProperty Name="FilmId" ColumnName="FilmId" />
+                <ScalarProperty Name="Ocjena" ColumnName="Ocjena" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="KategorijaFilma">
+            <EntityTypeMapping TypeName="eMovies2019Model.KategorijaFilma">
+              <MappingFragment StoreEntitySet="KategorijaFilma">
+                <ScalarProperty Name="Tip" ColumnName="Tip" />
+                <ScalarProperty Name="KategorijaId" ColumnName="KategorijaId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="esp_SelectFromUsers" FunctionName="eMovies2019Model.Store.esp_SelectFromUsers">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="eMovies2019Model.esp_SelectFromUsers_Result">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="username" ColumnName="username" />
+                <ScalarProperty Name="password" ColumnName="password" />
+                <ScalarProperty Name="Ime" ColumnName="Ime" />
+                <ScalarProperty Name="Prezime" ColumnName="Prezime" />
+                <ScalarProperty Name="datumRodjenja" ColumnName="datumRodjenja" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="esp_GetTop10RatedMovies" FunctionName="eMovies2019Model.Store.esp_GetTop10RatedMovies">
+          <ResultMapping>
+              <ComplexTypeMapping TypeName="eMovies2019Model.esp_GetTop10RatedMovies_Result">
+                <ScalarProperty Name="Naslov" ColumnName="Naslov" />
+                <ScalarProperty Name="Opis" ColumnName="Opis" />
+                <ScalarProperty Name="Tip" ColumnName="Tip" />
+                <ScalarProperty Name="ProsjecnaOcjena" ColumnName="ProsjecnaOcjena" />
+                <ScalarProperty Name="FilmId" ColumnName="FilmId" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="esp_GetTop10RatedTVshows" FunctionName="eMovies2019Model.Store.esp_GetTop10RatedTVshows">
+          <ResultMapping>
+              <ComplexTypeMapping TypeName="eMovies2019Model.esp_GetTop10RatedMovies_Result">
+                <ScalarProperty Name="Naslov" ColumnName="Naslov" />
+                <ScalarProperty Name="Opis" ColumnName="Opis" />
+                <ScalarProperty Name="Tip" ColumnName="Tip" />
+                <ScalarProperty Name="ProsjecnaOcjena" ColumnName="ProsjecnaOcjena" />
+                <ScalarProperty Name="FilmId" ColumnName="FilmId" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="esp_SearchMovie" FunctionName="eMovies2019Model.Store.esp_SearchMovie">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="eMovies2019Model.esp_SearchMovie_Result">
+                <ScalarProperty Name="Naslov" ColumnName="Naslov" />
+                <ScalarProperty Name="Opis" ColumnName="Opis" />
+                <ScalarProperty Name="Tip" ColumnName="Tip" />
+                <ScalarProperty Name="ProsjecnaOcjena" ColumnName="ProsjecnaOcjena" />
+                <ScalarProperty Name="FilmId" ColumnName="FilmId" />
+                <ScalarProperty Name="Slika" ColumnName="Slika" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="esp_SearchMovieBetweenMinAndExact" FunctionName="eMovies2019Model.Store.esp_SearchMovieBetweenMinAndExact">
+          <ResultMapping>
+              <ComplexTypeMapping TypeName="eMovies2019Model.esp_SearchMovie_Result">
+                <ScalarProperty Name="Naslov" ColumnName="Naslov" />
+                <ScalarProperty Name="Opis" ColumnName="Opis" />
+                <ScalarProperty Name="Tip" ColumnName="Tip" />
+                <ScalarProperty Name="ProsjecnaOcjena" ColumnName="ProsjecnaOcjena" />
+                <ScalarProperty Name="FilmId" ColumnName="FilmId" />
+                <ScalarProperty Name="Slika" ColumnName="Slika" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="esp_SearchMovieByEarlierDate" FunctionName="eMovies2019Model.Store.esp_SearchMovieByEarlierDate">
+          <ResultMapping>
+              <ComplexTypeMapping TypeName="eMovies2019Model.esp_SearchMovie_Result">
+                <ScalarProperty Name="Naslov" ColumnName="Naslov" />
+                <ScalarProperty Name="Opis" ColumnName="Opis" />
+                <ScalarProperty Name="Tip" ColumnName="Tip" />
+                <ScalarProperty Name="ProsjecnaOcjena" ColumnName="ProsjecnaOcjena" />
+                <ScalarProperty Name="FilmId" ColumnName="FilmId" />
+                <ScalarProperty Name="Slika" ColumnName="Slika" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="esp_SearchMovieByExactRating" FunctionName="eMovies2019Model.Store.esp_SearchMovieByExactRating">
+          <ResultMapping>
+              <ComplexTypeMapping TypeName="eMovies2019Model.esp_SearchMovie_Result">
+                <ScalarProperty Name="Naslov" ColumnName="Naslov" />
+                <ScalarProperty Name="Opis" ColumnName="Opis" />
+                <ScalarProperty Name="Tip" ColumnName="Tip" />
+                <ScalarProperty Name="ProsjecnaOcjena" ColumnName="ProsjecnaOcjena" />
+                <ScalarProperty Name="FilmId" ColumnName="FilmId" />
+                <ScalarProperty Name="Slika" ColumnName="Slika" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="esp_SearchMovieByLaterDate" FunctionName="eMovies2019Model.Store.esp_SearchMovieByLaterDate">
+          <ResultMapping>
+              <ComplexTypeMapping TypeName="eMovies2019Model.esp_SearchMovie_Result">
+                <ScalarProperty Name="Naslov" ColumnName="Naslov" />
+                <ScalarProperty Name="Opis" ColumnName="Opis" />
+                <ScalarProperty Name="Tip" ColumnName="Tip" />
+                <ScalarProperty Name="ProsjecnaOcjena" ColumnName="ProsjecnaOcjena" />
+                <ScalarProperty Name="FilmId" ColumnName="FilmId" />
+                <ScalarProperty Name="Slika" ColumnName="Slika" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="esp_LoadTenMoreMoviesResults" FunctionName="eMovies2019Model.Store.esp_LoadTenMoreMoviesResults">
+          <ResultMapping>
+              <ComplexTypeMapping TypeName="eMovies2019Model.esp_GetTop10RatedMovies_Result">
+                <ScalarProperty Name="Naslov" ColumnName="Naslov" />
+                <ScalarProperty Name="Opis" ColumnName="Opis" />
+                <ScalarProperty Name="Tip" ColumnName="Tip" />
+                <ScalarProperty Name="ProsjecnaOcjena" ColumnName="ProsjecnaOcjena" />
+                <ScalarProperty Name="FilmId" ColumnName="FilmId" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="esp_LoadTenMoreTvShowsResults" FunctionName="eMovies2019Model.Store.esp_LoadTenMoreTvShowsResults">
+          <ResultMapping>
+              <ComplexTypeMapping TypeName="eMovies2019Model.esp_GetTop10RatedMovies_Result">
+                <ScalarProperty Name="Naslov" ColumnName="Naslov" />
+                <ScalarProperty Name="Opis" ColumnName="Opis" />
+                <ScalarProperty Name="Tip" ColumnName="Tip" />
+                <ScalarProperty Name="ProsjecnaOcjena" ColumnName="ProsjecnaOcjena" />
+                <ScalarProperty Name="FilmId" ColumnName="FilmId" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="esp_GetAllMovies" FunctionName="eMovies2019Model.Store.esp_GetAllMovies">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="eMovies2019Model.esp_GetAllMovies_Result">
+                <ScalarProperty Name="Naslov" ColumnName="Naslov" />
+                <ScalarProperty Name="Opis" ColumnName="Opis" />
+                <ScalarProperty Name="Tip" ColumnName="Tip" />
+                <ScalarProperty Name="ProsjecnaOcjena" ColumnName="ProsjecnaOcjena" />
+                <ScalarProperty Name="FilmId" ColumnName="FilmId" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="esp_AddRatingToMovie" FunctionName="eMovies2019Model.Store.esp_AddRatingToMovie" />
+          <FunctionImportMapping FunctionImportName="esp_SearchMovieSkip10Rows" FunctionName="eMovies2019Model.Store.esp_SearchMovieSkip10Rows">
+          <ResultMapping>
+              <ComplexTypeMapping TypeName="eMovies2019Model.esp_SearchMovie_Result">
+                <ScalarProperty Name="Naslov" ColumnName="Naslov" />
+                <ScalarProperty Name="Opis" ColumnName="Opis" />
+                <ScalarProperty Name="Tip" ColumnName="Tip" />
+                <ScalarProperty Name="ProsjecnaOcjena" ColumnName="ProsjecnaOcjena" />
+                <ScalarProperty Name="FilmId" ColumnName="FilmId" />
+                <ScalarProperty Name="Slika" ColumnName="Slika" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="esp_SearchMovieBetweenMinAndExactSkip10Rows" FunctionName="eMovies2019Model.Store.esp_SearchMovieBetweenMinAndExactSkip10Rows">
+          <ResultMapping>
+              <ComplexTypeMapping TypeName="eMovies2019Model.esp_SearchMovie_Result">
+                <ScalarProperty Name="Naslov" ColumnName="Naslov" />
+                <ScalarProperty Name="Opis" ColumnName="Opis" />
+                <ScalarProperty Name="Tip" ColumnName="Tip" />
+                <ScalarProperty Name="ProsjecnaOcjena" ColumnName="ProsjecnaOcjena" />
+                <ScalarProperty Name="FilmId" ColumnName="FilmId" />
+                <ScalarProperty Name="Slika" ColumnName="Slika" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="esp_SearchMovieByEarlierDateSkip10Rows" FunctionName="eMovies2019Model.Store.esp_SearchMovieByEarlierDateSkip10Rows">
+          <ResultMapping>
+              <ComplexTypeMapping TypeName="eMovies2019Model.esp_SearchMovie_Result">
+                <ScalarProperty Name="Naslov" ColumnName="Naslov" />
+                <ScalarProperty Name="Opis" ColumnName="Opis" />
+                <ScalarProperty Name="Tip" ColumnName="Tip" />
+                <ScalarProperty Name="ProsjecnaOcjena" ColumnName="ProsjecnaOcjena" />
+                <ScalarProperty Name="FilmId" ColumnName="FilmId" />
+                <ScalarProperty Name="Slika" ColumnName="Slika" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="esp_SearchMovieByExactRatingSkip10Rows" FunctionName="eMovies2019Model.Store.esp_SearchMovieByExactRatingSkip10Rows">
+          <ResultMapping>
+              <ComplexTypeMapping TypeName="eMovies2019Model.esp_SearchMovie_Result">
+                <ScalarProperty Name="Naslov" ColumnName="Naslov" />
+                <ScalarProperty Name="Opis" ColumnName="Opis" />
+                <ScalarProperty Name="Tip" ColumnName="Tip" />
+                <ScalarProperty Name="ProsjecnaOcjena" ColumnName="ProsjecnaOcjena" />
+                <ScalarProperty Name="FilmId" ColumnName="FilmId" />
+                <ScalarProperty Name="Slika" ColumnName="Slika" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="esp_SearchMovieByLaterDateSkip10Rows" FunctionName="eMovies2019Model.Store.esp_SearchMovieByLaterDateSkip10Rows">
+          <ResultMapping>
+              <ComplexTypeMapping TypeName="eMovies2019Model.esp_SearchMovie_Result">
+                <ScalarProperty Name="Naslov" ColumnName="Naslov" />
+                <ScalarProperty Name="Opis" ColumnName="Opis" />
+                <ScalarProperty Name="Tip" ColumnName="Tip" />
+                <ScalarProperty Name="ProsjecnaOcjena" ColumnName="ProsjecnaOcjena" />
+                <ScalarProperty Name="FilmId" ColumnName="FilmId" />
+                <ScalarProperty Name="Slika" ColumnName="Slika" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

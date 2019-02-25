@@ -1,0 +1,9 @@
+C:\Users\NonRoot\source\repos\eMoviesReviews\eMoviesReviews.Core\bin\Debug\netstandard2.0\eMoviesReviews.Core.deps.json
+C:\Users\NonRoot\source\repos\eMoviesReviews\eMoviesReviews.Core\bin\Debug\netstandard2.0\eMoviesReviews.Core.dll
+C:\Users\NonRoot\source\repos\eMoviesReviews\eMoviesReviews.Core\bin\Debug\netstandard2.0\eMoviesReviews.Core.pdb
+C:\Users\NonRoot\source\repos\eMoviesReviews\eMoviesReviews.Core\obj\Debug\netstandard2.0\eMoviesReviews.Core.csprojAssemblyReference.cache
+C:\Users\NonRoot\source\repos\eMoviesReviews\eMoviesReviews.Core\obj\Debug\netstandard2.0\eMoviesReviews.Core.csproj.CoreCompileInputs.cache
+C:\Users\NonRoot\source\repos\eMoviesReviews\eMoviesReviews.Core\obj\Debug\netstandard2.0\eMoviesReviews.Core.AssemblyInfoInputs.cache
+C:\Users\NonRoot\source\repos\eMoviesReviews\eMoviesReviews.Core\obj\Debug\netstandard2.0\eMoviesReviews.Core.AssemblyInfo.cs
+C:\Users\NonRoot\source\repos\eMoviesReviews\eMoviesReviews.Core\obj\Debug\netstandard2.0\eMoviesReviews.Core.dll
+C:\Users\NonRoot\source\repos\eMoviesReviews\eMoviesReviews.Core\obj\Debug\netstandard2.0\eMoviesReviews.Core.pdb

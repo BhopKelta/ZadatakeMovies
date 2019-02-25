@@ -1,0 +1,96 @@
+﻿@model List<esp_GetAllMovies_Result>
+@{
+    ViewData["Title"] = "OcijeniFilm";
+}
+<script src="~/js/jquery.star-rating.js"></script>
+
+<div class="container">
+    <div class="row" id="forHide">
+        <div class="col-md col-sm">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Naslov filma</th>
+                        <th>Opis filma</th>
+                        <th>Tip filma</th>
+                        <th>Prosjecna ocjena</th>
+                        <th>Akcija</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var x in Model)
+                    {
+                        <tr>
+                            <td>@x.Naslov</td>
+                            <td>@x.Opis</td>
+                            <td>@x.Tip</td>
+                            <td>
+                                <span class="rating">@x.ProsjecnaOcjena/10 stars</span>
+                            </td>
+                            <td><a onclick="Funkcija('@x.Naslov',@x.FilmId)"><i class="fa fa-star" style="font-size:18px"></i>Ocijeni</a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row" style="display:none" id="forShow">
+        <div class="col-md col-sm col-md-offset-1 col-sm-offset-1">
+            <form asp-action="">
+                <p></p>
+                <p></p>
+                <div class="form-group">
+                    <h3>Rate movie:</h3>
+                    <h4 id="change"></h4>
+                    <span class="click-event">3.5</span>
+                </div>
+           </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    //star plugins
+    jQuery(function ($) {
+        $.fn.star_rating({
+            max: 5
+        });
+        $('.rating').star_rating();
+        
+    });
+
+    function Funkcija(Naslov, filmId) {
+        $("#forHide").hide();
+        $("#forShow").show();
+        $("#change").html(Naslov);
+
+        $('.click-event').star_rating({
+            // Add some functionality for when a star is clicked
+            click: function (clicked_rating, event) {
+                event.preventDefault();
+                var bearer = localStorage.getItem("token");
+
+                var root = {
+                    Ocjena: clicked_rating,
+                    FilmId: filmId
+                };
+
+                $.ajax({
+                    type: "post",
+                    url: "http://localhost:49487/api/Movies/RateMovie",
+                    headers: {
+                        'Authorization': 'Bearer ' + bearer
+                    },
+                    data: JSON.stringify(root),
+                    contentType:"application/json",
+                    success: function (data) {
+                        alert("Uspjesno dodana ocjena");
+                        location.reload();
+                    }
+                });
+
+                this.rating(clicked_rating);
+            }
+        });
+    }
+</script>

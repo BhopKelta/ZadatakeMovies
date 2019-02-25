@@ -1,0 +1,33 @@
+﻿
+@{
+    ViewData["Title"] = "Dodaj film";
+}
+
+
+<div class="container">
+    <h2>Dodaj novi film</h2>
+    <div class="row">
+        <div class="col-md col-sm">
+            <form asp-action="DodajFilm" asp-controller="Movies" method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                    <input name="name" class="form-control" placeholder="Name of the movie" required="required" />
+                </div>
+                <div class="form-group">
+                    <textarea name="description" placeholder="Description of the movie" class="form-control" required="required"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="realeaseDate">Release date</label>
+                    <input type="date" class="form-control"  name="realeaseDate" placeholder="nesto"/>
+                </div>
+                <div class="form-group">
+                    <label for="picture">Cover photo</label>
+                    <input type="file" name="picture" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <input type="submit" class="btn btn-success" value="Submit" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,257 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="eMovies2019ModelStoreContainer" CdmEntityContainer="eMovies2019Entities">
+    <EntitySetMapping Name="Filmovi">
+      <EntityTypeMapping TypeName="eMovies2019Model.Filmovi">
+        <MappingFragment StoreEntitySet="Filmovi">
+          <ScalarProperty Name="KategorijaId" ColumnName="KategorijaId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Naslov" ColumnName="Naslov" />
+          <ScalarProperty Name="Slika" ColumnName="Slika" />
+          <ScalarProperty Name="Opis" ColumnName="Opis" />
+          <ScalarProperty Name="DatumRealizacije" ColumnName="DatumRealizacije" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Glumci">
+      <EntityTypeMapping TypeName="eMovies2019Model.Glumci">
+        <MappingFragment StoreEntitySet="Glumci">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Ime" ColumnName="Ime" />
+          <ScalarProperty Name="Prezime" ColumnName="Prezime" />
+          <ScalarProperty Name="datumRodjenja" ColumnName="datumRodjenja" />
+          <ScalarProperty Name="GodineRada" ColumnName="GodineRada" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="GlumljenjeFilma">
+      <EntityTypeMapping TypeName="eMovies2019Model.GlumljenjeFilma">
+        <MappingFragment StoreEntitySet="GlumljenjeFilma">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="GlumacId" ColumnName="GlumacId" />
+          <ScalarProperty Name="FilmId" ColumnName="FilmId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Korisnici">
+      <EntityTypeMapping TypeName="eMovies2019Model.Korisnici">
+        <MappingFragment StoreEntitySet="Korisnici">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="username" ColumnName="username" />
+          <ScalarProperty Name="password" ColumnName="password" />
+          <ScalarProperty Name="Ime" ColumnName="Ime" />
+          <ScalarProperty Name="Prezime" ColumnName="Prezime" />
+          <ScalarProperty Name="datumRodjenja" ColumnName="datumRodjenja" />
+          <ScalarProperty Name="Email" ColumnName="Email" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="RecenzijeFilmova">
+      <EntityTypeMapping TypeName="eMovies2019Model.RecenzijeFilmova">
+        <MappingFragment StoreEntitySet="RecenzijeFilmova">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="KorisnikId" ColumnName="KorisnikId" />
+          <ScalarProperty Name="FilmId" ColumnName="FilmId" />
+          <ScalarProperty Name="Ocjena" ColumnName="Ocjena" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="KategorijaFilma">
+      <EntityTypeMapping TypeName="eMovies2019Model.KategorijaFilma">
+        <MappingFragment StoreEntitySet="KategorijaFilma">
+          <ScalarProperty Name="Tip" ColumnName="Tip" />
+          <ScalarProperty Name="KategorijaId" ColumnName="KategorijaId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <FunctionImportMapping FunctionImportName="esp_SelectFromUsers" FunctionName="eMovies2019Model.Store.esp_SelectFromUsers">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="eMovies2019Model.esp_SelectFromUsers_Result">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="username" ColumnName="username" />
+          <ScalarProperty Name="password" ColumnName="password" />
+          <ScalarProperty Name="Ime" ColumnName="Ime" />
+          <ScalarProperty Name="Prezime" ColumnName="Prezime" />
+          <ScalarProperty Name="datumRodjenja" ColumnName="datumRodjenja" />
+          <ScalarProperty Name="Email" ColumnName="Email" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="esp_GetTop10RatedMovies" FunctionName="eMovies2019Model.Store.esp_GetTop10RatedMovies">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="eMovies2019Model.esp_GetTop10RatedMovies_Result">
+          <ScalarProperty Name="Naslov" ColumnName="Naslov" />
+          <ScalarProperty Name="Opis" ColumnName="Opis" />
+          <ScalarProperty Name="Tip" ColumnName="Tip" />
+          <ScalarProperty Name="ProsjecnaOcjena" ColumnName="ProsjecnaOcjena" />
+          <ScalarProperty Name="FilmId" ColumnName="FilmId" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="esp_GetTop10RatedTVshows" FunctionName="eMovies2019Model.Store.esp_GetTop10RatedTVshows">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="eMovies2019Model.esp_GetTop10RatedMovies_Result">
+          <ScalarProperty Name="Naslov" ColumnName="Naslov" />
+          <ScalarProperty Name="Opis" ColumnName="Opis" />
+          <ScalarProperty Name="Tip" ColumnName="Tip" />
+          <ScalarProperty Name="ProsjecnaOcjena" ColumnName="ProsjecnaOcjena" />
+          <ScalarProperty Name="FilmId" ColumnName="FilmId" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="esp_SearchMovie" FunctionName="eMovies2019Model.Store.esp_SearchMovie">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="eMovies2019Model.esp_SearchMovie_Result">
+          <ScalarProperty Name="Naslov" ColumnName="Naslov" />
+          <ScalarProperty Name="Opis" ColumnName="Opis" />
+          <ScalarProperty Name="Tip" ColumnName="Tip" />
+          <ScalarProperty Name="ProsjecnaOcjena" ColumnName="ProsjecnaOcjena" />
+          <ScalarProperty Name="FilmId" ColumnName="FilmId" />
+          <ScalarProperty Name="Slika" ColumnName="Slika" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="esp_SearchMovieBetweenMinAndExact" FunctionName="eMovies2019Model.Store.esp_SearchMovieBetweenMinAndExact">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="eMovies2019Model.esp_SearchMovie_Result">
+          <ScalarProperty Name="Naslov" ColumnName="Naslov" />
+          <ScalarProperty Name="Opis" ColumnName="Opis" />
+          <ScalarProperty Name="Tip" ColumnName="Tip" />
+          <ScalarProperty Name="ProsjecnaOcjena" ColumnName="ProsjecnaOcjena" />
+          <ScalarProperty Name="FilmId" ColumnName="FilmId" />
+          <ScalarProperty Name="Slika" ColumnName="Slika" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="esp_SearchMovieByEarlierDate" FunctionName="eMovies2019Model.Store.esp_SearchMovieByEarlierDate">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="eMovies2019Model.esp_SearchMovie_Result">
+          <ScalarProperty Name="Naslov" ColumnName="Naslov" />
+          <ScalarProperty Name="Opis" ColumnName="Opis" />
+          <ScalarProperty Name="Tip" ColumnName="Tip" />
+          <ScalarProperty Name="ProsjecnaOcjena" ColumnName="ProsjecnaOcjena" />
+          <ScalarProperty Name="FilmId" ColumnName="FilmId" />
+          <ScalarProperty Name="Slika" ColumnName="Slika" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="esp_SearchMovieByExactRating" FunctionName="eMovies2019Model.Store.esp_SearchMovieByExactRating">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="eMovies2019Model.esp_SearchMovie_Result">
+          <ScalarProperty Name="Naslov" ColumnName="Naslov" />
+          <ScalarProperty Name="Opis" ColumnName="Opis" />
+          <ScalarProperty Name="Tip" ColumnName="Tip" />
+          <ScalarProperty Name="ProsjecnaOcjena" ColumnName="ProsjecnaOcjena" />
+          <ScalarProperty Name="FilmId" ColumnName="FilmId" />
+          <ScalarProperty Name="Slika" ColumnName="Slika" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="esp_SearchMovieByLaterDate" FunctionName="eMovies2019Model.Store.esp_SearchMovieByLaterDate">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="eMovies2019Model.esp_SearchMovie_Result">
+          <ScalarProperty Name="Naslov" ColumnName="Naslov" />
+          <ScalarProperty Name="Opis" ColumnName="Opis" />
+          <ScalarProperty Name="Tip" ColumnName="Tip" />
+          <ScalarProperty Name="ProsjecnaOcjena" ColumnName="ProsjecnaOcjena" />
+          <ScalarProperty Name="FilmId" ColumnName="FilmId" />
+          <ScalarProperty Name="Slika" ColumnName="Slika" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="esp_LoadTenMoreMoviesResults" FunctionName="eMovies2019Model.Store.esp_LoadTenMoreMoviesResults">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="eMovies2019Model.esp_GetTop10RatedMovies_Result">
+          <ScalarProperty Name="Naslov" ColumnName="Naslov" />
+          <ScalarProperty Name="Opis" ColumnName="Opis" />
+          <ScalarProperty Name="Tip" ColumnName="Tip" />
+          <ScalarProperty Name="ProsjecnaOcjena" ColumnName="ProsjecnaOcjena" />
+          <ScalarProperty Name="FilmId" ColumnName="FilmId" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="esp_LoadTenMoreTvShowsResults" FunctionName="eMovies2019Model.Store.esp_LoadTenMoreTvShowsResults">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="eMovies2019Model.esp_GetTop10RatedMovies_Result">
+          <ScalarProperty Name="Naslov" ColumnName="Naslov" />
+          <ScalarProperty Name="Opis" ColumnName="Opis" />
+          <ScalarProperty Name="Tip" ColumnName="Tip" />
+          <ScalarProperty Name="ProsjecnaOcjena" ColumnName="ProsjecnaOcjena" />
+          <ScalarProperty Name="FilmId" ColumnName="FilmId" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="esp_GetAllMovies" FunctionName="eMovies2019Model.Store.esp_GetAllMovies">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="eMovies2019Model.esp_GetAllMovies_Result">
+          <ScalarProperty Name="Naslov" ColumnName="Naslov" />
+          <ScalarProperty Name="Opis" ColumnName="Opis" />
+          <ScalarProperty Name="Tip" ColumnName="Tip" />
+          <ScalarProperty Name="ProsjecnaOcjena" ColumnName="ProsjecnaOcjena" />
+          <ScalarProperty Name="FilmId" ColumnName="FilmId" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="esp_AddRatingToMovie" FunctionName="eMovies2019Model.Store.esp_AddRatingToMovie" />
+    <FunctionImportMapping FunctionImportName="esp_SearchMovieSkip10Rows" FunctionName="eMovies2019Model.Store.esp_SearchMovieSkip10Rows">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="eMovies2019Model.esp_SearchMovie_Result">
+          <ScalarProperty Name="Naslov" ColumnName="Naslov" />
+          <ScalarProperty Name="Opis" ColumnName="Opis" />
+          <ScalarProperty Name="Tip" ColumnName="Tip" />
+          <ScalarProperty Name="ProsjecnaOcjena" ColumnName="ProsjecnaOcjena" />
+          <ScalarProperty Name="FilmId" ColumnName="FilmId" />
+          <ScalarProperty Name="Slika" ColumnName="Slika" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="esp_SearchMovieBetweenMinAndExactSkip10Rows" FunctionName="eMovies2019Model.Store.esp_SearchMovieBetweenMinAndExactSkip10Rows">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="eMovies2019Model.esp_SearchMovie_Result">
+          <ScalarProperty Name="Naslov" ColumnName="Naslov" />
+          <ScalarProperty Name="Opis" ColumnName="Opis" />
+          <ScalarProperty Name="Tip" ColumnName="Tip" />
+          <ScalarProperty Name="ProsjecnaOcjena" ColumnName="ProsjecnaOcjena" />
+          <ScalarProperty Name="FilmId" ColumnName="FilmId" />
+          <ScalarProperty Name="Slika" ColumnName="Slika" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="esp_SearchMovieByEarlierDateSkip10Rows" FunctionName="eMovies2019Model.Store.esp_SearchMovieByEarlierDateSkip10Rows">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="eMovies2019Model.esp_SearchMovie_Result">
+          <ScalarProperty Name="Naslov" ColumnName="Naslov" />
+          <ScalarProperty Name="Opis" ColumnName="Opis" />
+          <ScalarProperty Name="Tip" ColumnName="Tip" />
+          <ScalarProperty Name="ProsjecnaOcjena" ColumnName="ProsjecnaOcjena" />
+          <ScalarProperty Name="FilmId" ColumnName="FilmId" />
+          <ScalarProperty Name="Slika" ColumnName="Slika" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="esp_SearchMovieByExactRatingSkip10Rows" FunctionName="eMovies2019Model.Store.esp_SearchMovieByExactRatingSkip10Rows">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="eMovies2019Model.esp_SearchMovie_Result">
+          <ScalarProperty Name="Naslov" ColumnName="Naslov" />
+          <ScalarProperty Name="Opis" ColumnName="Opis" />
+          <ScalarProperty Name="Tip" ColumnName="Tip" />
+          <ScalarProperty Name="ProsjecnaOcjena" ColumnName="ProsjecnaOcjena" />
+          <ScalarProperty Name="FilmId" ColumnName="FilmId" />
+          <ScalarProperty Name="Slika" ColumnName="Slika" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="esp_SearchMovieByLaterDateSkip10Rows" FunctionName="eMovies2019Model.Store.esp_SearchMovieByLaterDateSkip10Rows">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="eMovies2019Model.esp_SearchMovie_Result">
+          <ScalarProperty Name="Naslov" ColumnName="Naslov" />
+          <ScalarProperty Name="Opis" ColumnName="Opis" />
+          <ScalarProperty Name="Tip" ColumnName="Tip" />
+          <ScalarProperty Name="ProsjecnaOcjena" ColumnName="ProsjecnaOcjena" />
+          <ScalarProperty Name="FilmId" ColumnName="FilmId" />
+          <ScalarProperty Name="Slika" ColumnName="Slika" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+  </EntityContainerMapping>
+</Mapping>
